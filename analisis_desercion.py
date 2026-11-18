@@ -40,6 +40,7 @@ def explorar(df):
     numéricas, y los valores de las columnas programa, jornada, genero y estado.
     Pregunta: ¿alguna columna numérica aparece como texto? ¿Por qué crees que pasa?
     """
+    # TODO 1: imprimir shape, info(), describe() y value_counts() de las columnas indicadas.
     print("=" * 70)
     print("PASO 1: PRIMERA MIRADA AL DATASET")
     print("=" * 70)
@@ -66,6 +67,7 @@ def auditar(df):
     (edad, promedio, horas), duplicados y formatos de fecha.
     Pregunta: ¿cuál de estos problemas afecta más el análisis? ¿Por qué?
     """
+     # TODO 2: imprimir cada uno de los conteos de problemas.
     print("\n" + "=" * 70)
     print("PASO 2: AUDITORÍA DE CALIDAD (sin corregir)")
     print("=" * 70)
@@ -113,6 +115,7 @@ def convertir_numericos(df):
     convertir con pd.to_numeric(..., errors="coerce"); reemplazar 999 por nulo en distancia_km.
     Registra cada conversión con registrar().
     """
+     # TODO 3: convertir asistencia_pct, horas_trabajo_semana y distancia_km a número.
     # asistencia_pct: quitar '%' y convertir los guiones en nulos reales.
     n_pct = df["asistencia_pct"].str.contains("%", regex=False).sum()
     n_guion = (df["asistencia_pct"] == "-").sum()
@@ -144,6 +147,7 @@ def unificar_categorias(df):
     con las variantes que encontraste con value_counts(). Los valores correctos están en VALIDOS.
     Pregunta: ¿qué variantes son el mismo valor? ¿Hay alguna que no debas unificar?
     """
+    # TODO 4: unificar las escrituras de programa, jornada, genero y ciudad_procedencia.
     antes = {col: df[col].nunique() for col in VALIDOS}
     # Variantes (ya en minúsculas y sin espacios) -> forma correcta.
     variantes = {
@@ -174,6 +178,7 @@ def convertir_fechas(df):
     Pista: intenta el formato AAAA-MM-DD y luego DD/MM/AAAA, cada uno con errors="coerce",
     y junta los resultados con fillna(). Registra cuántas fechas tenían el segundo formato.
     """
+    # TODO 5: convertir fecha_matricula a fecha con los dos formatos.
     texto = df["fecha_matricula"].astype(str)
     n_dmy = texto.str.contains("/", regex=False).sum()
     iso = pd.to_datetime(texto, format="%Y-%m-%d", errors="coerce")
@@ -192,6 +197,7 @@ def eliminar_duplicados(df):
     Pregunta: ¿podrían existir dos estudiantes distintos con todos los datos iguales?
     Pista: duplicated() y drop_duplicates(), con reset_index(drop=True).
     """
+    # TODO 6: eliminar duplicados, registrar la decisión y devolver el dataframe.
     # Dos estudiantes distintos tendrían id_estudiante distinto, así que una fila idéntica
     # en las 23 columnas (incluido el id) es el mismo registro cargado dos veces.
     n_dup = df.duplicated().sum()
@@ -209,6 +215,7 @@ def tratar_faltantes(df):
     - Para ciudad o tipo de colegio, ¿conviene eliminar la fila o marcar el dato como 'Sin dato'?
     - motivo_retiro tiene muchos nulos. ¿Son errores? (Pista: ¿para quiénes aplica esa columna?)
     """
+    # TODO 7: tratar los nulos de promedio_acumulado, ciudad_procedencia y tipo_colegio.
     # promedio_acumulado: una nota no se puede inventar ni imputar con el promedio.
     n_prom = df["promedio_acumulado"].isnull().sum()
     df = df.dropna(subset=["promedio_acumulado"]).reset_index(drop=True)
@@ -237,6 +244,7 @@ def tratar_imposibles(df):
     - Una edad de 150 años es un error. ¿Qué valor pondrías en su lugar?
     - Si el estudiante no trabaja, ¿cuántas horas de trabajo tiene? ¿Cómo lo aplicas en código?
     """
+    # TODO 8: tratar edad, promedio_acumulado y horas_trabajo_semana, con sus justificaciones.
     # promedio_acumulado: la escala es 0 a 5; 45, 62 y 78 no existen. No se reescalan (sería inventar
     # la nota): se marcan como nulos y, como en el paso 7, se eliminan esas filas.
     imposibles = df["promedio_acumulado"] > 5
@@ -284,6 +292,7 @@ def crear_variables(df):
     - cuartil_asistencia: divide asistencia_pct en cuatro grupos iguales con pd.qcut.
     Pregunta: ¿por qué conviene usar cuartiles y no valores exactos de asistencia?
     """
+    # TODO 9: crear las columnas desertor y cuartil_asistencia.
     df["desertor"] = df["estado"].eq("desertor")
     df["cuartil_asistencia"] = pd.qcut(df["asistencia_pct"], 4, labels=["Q1", "Q2", "Q3", "Q4"])
     registrar("variables", "desertor", "crear columna booleana (estado == 'desertor')", df["desertor"].sum(),
@@ -301,6 +310,7 @@ def grafico_faltantes(df):
 
     Pista: sns.heatmap(df.isnull(), cbar=False)
     """
+    # TODO 10: dibujar, guardar en GRAFICOS / "mapa_faltantes.png" y mostrar.
     GRAFICOS.mkdir(parents=True, exist_ok=True)
     plt.figure(figsize=(12, 6))
     sns.heatmap(df.isnull(), cbar=False)
@@ -318,6 +328,7 @@ def grafico_distribuciones(antes, despues):
 
     Pregunta: ¿qué cambió en cada distribución? ¿Por qué?
     """
+    # TODO 11: dibujar los cuatro boxplots, guardar en GRAFICOS / "distribuciones_antes_despues.png" y mostrar.
     GRAFICOS.mkdir(parents=True, exist_ok=True)
     fig, ejes = plt.subplots(2, 2, figsize=(12, 8))
     sns.boxplot(x=antes["promedio_acumulado"], ax=ejes[0, 0])
@@ -340,6 +351,7 @@ def grafico_tasa_programa(df):
 
     Pista: df.groupby("programa")["desertor"].mean()
     """
+    # TODO 12: dibujar la tasa por programa, guardar en GRAFICOS / "tasa_desercion_por_programa.png" y mostrar.
     GRAFICOS.mkdir(parents=True, exist_ok=True)
     tasa = df.groupby("programa")["desertor"].mean().sort_values(ascending=False)
     plt.figure(figsize=(10, 6))
@@ -358,6 +370,7 @@ def grafico_tasa_asistencia(df):
 
     Pista: df.groupby("cuartil_asistencia", observed=True)["desertor"].mean()
     """
+    # TODO 13: dibujar la tasa por cuartil, guardar en GRAFICOS / "tasa_desercion_por_asistencia.png" y mostrar.
     GRAFICOS.mkdir(parents=True, exist_ok=True)
     tasa = df.groupby("cuartil_asistencia", observed=True)["desertor"].mean()
     plt.figure(figsize=(8, 5))
@@ -383,6 +396,7 @@ def responder_preguntas(df):
     Pregunta 5: ¿La deserción aumenta conforme baja la asistencia?
                 (Usa cuartil_asistencia.)
     """
+    # TODO 14: responder las cinco preguntas con groupby() y agg().
     print("\n" + "=" * 70)
     print("PASO 10: LAS CINCO PREGUNTAS")
     print("=" * 70)
