@@ -1,0 +1,23 @@
+paso,columna,accion,filas_afectadas,justificacion
+convertir_numericos,asistencia_pct,quitar símbolo % y convertir a número,300,El % es solo formato; sin quitarlo la columna es texto y no se puede promediar.
+convertir_numericos,asistencia_pct,reemplazar '-' por nulo real,202,El guion es un faltante disfrazado: no se conoce la asistencia y no se inventa.
+convertir_numericos,horas_trabajo_semana,reemplazar '-' por nulo y convertir a número,2822,El guion es un faltante disfrazado; se vuelve nulo real para tratarlo con una regla en el paso 8.
+convertir_numericos,distancia_km,reemplazar 999 por nulo,152,999 km es un código de 'sin dato'; dejarlo inflaría el promedio de distancia (la media pasa de ~17 km a ~32 km).
+unificar_categorias,programa,strip + lower + diccionario de variantes,260,"Mismo valor escrito distinto (mayúsculas, tildes, abreviaturas). Valores distintos: 10 -> 8."
+unificar_categorias,jornada,strip + lower + diccionario de variantes,485,"Mismo valor escrito distinto (mayúsculas, tildes, abreviaturas). Valores distintos: 6 -> 3."
+unificar_categorias,genero,strip + lower + diccionario de variantes,559,"Mismo valor escrito distinto (mayúsculas, tildes, abreviaturas). Valores distintos: 5 -> 2."
+unificar_categorias,ciudad_procedencia,strip + lower + diccionario de variantes,542,"Mismo valor escrito distinto (mayúsculas, tildes, abreviaturas). Valores distintos: 12 -> 7."
+convertir_fechas,fecha_matricula,convertir a fecha (AAAA-MM-DD y DD/MM/AAAA),3052,Fechas en dos formatos; se probó cada uno con formato explícito para no confundir día y mes. Fechas sin convertir: 0.
+duplicados,todas,eliminar filas duplicadas (se conserva la primera),150,"Fila idéntica en todas las columnas, incluido id_estudiante: es el mismo estudiante contado dos veces."
+faltantes,promedio_acumulado,eliminar filas con nulo,298,Una nota no se puede inventar; imputar el promedio encogería la variabilidad y sesgaría las comparaciones.
+faltantes,ciudad_procedencia,reemplazar nulo por 'Sin dato',96,Eliminar la fila perdería un estudiante con el resto de datos válidos; 'Sin dato' conserva la fila y se ve como grupo aparte.
+faltantes,tipo_colegio,reemplazar nulo por 'Sin dato',145,Eliminar la fila perdería un estudiante con el resto de datos válidos; 'Sin dato' conserva la fila y se ve como grupo aparte.
+faltantes,motivo_retiro,dejar nulo (sin cambios),6562,"Nulo esperado: solo aplica a desertores, así que no es un error y no se imputa."
+imposibles,promedio_acumulado,valores > 5 -> nulo -> eliminar filas,15,"Escala de 0 a 5: valores como 45, 62 o 78 son errores de registro; reescalarlos sería adivinar la nota."
+imposibles,edad,fuera de 15-60 -> mediana (22),12,Edades de 12 o 150 años no son plausibles para estudiantes; la mediana no se ve afectada por extremos y la fila conserva sus demás datos.
+imposibles,horas_trabajo_semana,trabaja='no' y horas nulas -> 0,2703,"Si el estudiante no trabaja, sus horas de trabajo son 0; no es un faltante sino un cero real."
+imposibles,horas_trabajo_semana,> 100 -> nulo -> mediana de quienes trabajan (24),29,Más de 100 horas semanales (200) es casi inviable junto a estudiar; se usa la mediana de quienes sí trabajan.
+imposibles,asistencia_pct,dejar nulos sin imputar,197,No se inventa la asistencia; los cuartiles y promedios ignoran los nulos.
+imposibles,distancia_km,dejar nulos sin imputar,333,No se inventa la distancia; no se usa en las cinco preguntas.
+variables,desertor,crear columna booleana (estado == 'desertor'),3136,Convierte el resultado en True/False; su promedio es directamente la tasa de deserción.
+variables,cuartil_asistencia,crear cuartiles de asistencia con pd.qcut,9490,Cuatro grupos del mismo tamaño dan tasas comparables y estables; con valores exactos cada grupo sería diminuto.

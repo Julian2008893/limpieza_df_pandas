@@ -1,0 +1,306 @@
+/* =========================================================
+   Informe: calidad de datos para la retención estudiantil
+   Hoja de estilos autocontenida (sin fuentes ni librerías externas)
+   ========================================================= */
+
+:root {
+  --fondo: #f6f7f9;
+  --superficie: #ffffff;
+  --texto: #1d2430;
+  --texto-suave: #566070;
+  --borde: #d9dee6;
+  --acento: #1f5fbf;
+  --acento-suave: #e8f0fc;
+  --codigo-fondo: #eef1f5;
+  --cabecera-fondo: #eef2f8;
+  --sombra: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
+  --ancho-lectura: 78ch;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo: #12161c;
+    --superficie: #1a2028;
+    --texto: #e6e9ee;
+    --texto-suave: #a3adbb;
+    --borde: #2e3744;
+    --acento: #7fb1ff;
+    --acento-suave: #1d2a3f;
+    --codigo-fondo: #232b36;
+    --cabecera-fondo: #212a36;
+    --sombra: none;
+  }
+  .figura img { background: #ffffff; }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 1rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+/* ---------- Estructura general ---------- */
+
+.contenedor {
+  display: grid;
+  grid-template-columns: 16rem minmax(0, 1fr);
+  gap: 2rem;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+}
+
+.encabezado {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 1.25rem;
+}
+
+.encabezado .etiqueta {
+  margin: 0 0 .25rem;
+  font-size: .85rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--acento);
+}
+
+.encabezado h1 {
+  margin: 0 0 .5rem;
+  font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+  line-height: 1.2;
+}
+
+.encabezado .resumen {
+  margin: 0;
+  max-width: var(--ancho-lectura);
+  color: var(--texto-suave);
+}
+
+/* ---------- Menú lateral ---------- */
+
+.indice {
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  padding: 1rem;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: .75rem;
+  box-shadow: var(--sombra);
+  font-size: .9rem;
+}
+
+.indice h2 {
+  margin: 0 0 .5rem;
+  font-size: .8rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+  border: 0;
+  padding: 0;
+}
+
+.indice ul { margin: 0; padding: 0; list-style: none; }
+.indice ul ul { margin: .15rem 0 .35rem .75rem; border-left: 1px solid var(--borde); padding-left: .6rem; }
+.indice li { margin: .1rem 0; }
+
+.indice a {
+  display: block;
+  padding: .2rem .35rem;
+  border-radius: .35rem;
+  color: var(--texto);
+  text-decoration: none;
+  line-height: 1.35;
+}
+
+.indice a:hover,
+.indice a:focus-visible { background: var(--acento-suave); color: var(--acento); }
+
+/* ---------- Contenido ---------- */
+
+main {
+  min-width: 0;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: .75rem;
+  box-shadow: var(--sombra);
+  padding: 1.5rem clamp(1rem, 3vw, 2.25rem) 2rem;
+}
+
+main > section { max-width: 100%; }
+
+main h2 {
+  margin: 2.5rem 0 1rem;
+  padding-bottom: .4rem;
+  border-bottom: 2px solid var(--borde);
+  font-size: 1.45rem;
+  line-height: 1.3;
+}
+
+main h2:first-child { margin-top: 0; }
+
+main h3 {
+  margin: 2rem 0 .75rem;
+  font-size: 1.1rem;
+  line-height: 1.35;
+  color: var(--acento);
+}
+
+main p,
+main ul { max-width: var(--ancho-lectura); margin: 0 0 1rem; }
+
+main ul { padding-left: 1.4rem; }
+main li { margin-bottom: .4rem; }
+
+main em { color: var(--texto-suave); }
+
+code {
+  padding: .1em .35em;
+  background: var(--codigo-fondo);
+  border-radius: .3rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: .88em;
+  overflow-wrap: anywhere;
+}
+
+.pregunta {
+  margin: 0 0 1rem;
+  padding: .6rem .9rem;
+  background: var(--acento-suave);
+  border-left: 4px solid var(--acento);
+  border-radius: 0 .4rem .4rem 0;
+}
+
+/* ---------- Tablas ---------- */
+
+.tabla {
+  margin: 0 0 1.25rem;
+  overflow-x: auto;              /* en pantallas angostas la tabla se desplaza, no se corta */
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--borde);
+  border-radius: .5rem;
+}
+
+.tabla table {
+  width: 100%;
+  min-width: 28rem;
+  border-collapse: collapse;
+  font-size: .92rem;
+  line-height: 1.45;
+}
+
+.tabla th,
+.tabla td {
+  padding: .55rem .75rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--borde);
+}
+
+.tabla thead th {
+  background: var(--cabecera-fondo);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.tabla tbody tr:last-child td { border-bottom: 0; }
+.tabla tbody tr:nth-child(even) { background: color-mix(in srgb, var(--cabecera-fondo) 45%, transparent); }
+.tabla td:first-child { font-weight: 550; }
+
+/* ---------- Figuras ---------- */
+
+.figura {
+  margin: 1.5rem 0;
+  padding: .75rem;
+  border: 1px solid var(--borde);
+  border-radius: .5rem;
+  background: var(--superficie);
+}
+
+.figura img {
+  display: block;
+  width: 100%;
+  max-width: 46rem;
+  height: auto;
+  margin: 0 auto;
+  border-radius: .25rem;
+}
+
+.figura figcaption {
+  margin-top: .6rem;
+  font-size: .85rem;
+  color: var(--texto-suave);
+  text-align: center;
+}
+
+/* ---------- Pie ---------- */
+
+.pie {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+  font-size: .85rem;
+  color: var(--texto-suave);
+}
+
+/* ---------- Pantallas medianas y pequeñas ---------- */
+
+@media (max-width: 62rem) {
+  .contenedor { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+
+  .indice {
+    position: static;
+    max-height: none;
+  }
+
+  /* el menú se vuelve un bloque desplegable simple en celulares */
+  .indice ul ul { display: none; }
+}
+
+@media (max-width: 36rem) {
+  body { font-size: .975rem; }
+  .encabezado { padding-top: 1.25rem; }
+  main { padding: 1rem; border-radius: .5rem; }
+  main h2 { font-size: 1.25rem; }
+  .tabla table { font-size: .85rem; }
+  .tabla th, .tabla td { padding: .45rem .55rem; }
+}
+
+/* ---------- Impresión (o "Guardar como PDF") ---------- */
+
+@media print {
+  :root {
+    --fondo: #ffffff; --superficie: #ffffff; --texto: #000000;
+    --texto-suave: #333333; --borde: #bbbbbb; --acento: #000000;
+    --acento-suave: #f0f0f0; --cabecera-fondo: #eeeeee; --codigo-fondo: #f0f0f0;
+  }
+  body { font-size: 10.5pt; background: #fff; }
+  .indice { display: none; }
+  .contenedor { display: block; padding: 0; }
+  main { border: 0; box-shadow: none; padding: 0; }
+  .encabezado { padding: 0 0 .75rem; }
+  main h2 { break-after: avoid; }
+  main h3 { break-after: avoid; color: #000; }
+  .tabla { overflow: visible; break-inside: avoid; }
+  .tabla table { min-width: 0; }
+  .figura { break-inside: avoid; }
+  a { color: inherit; text-decoration: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
